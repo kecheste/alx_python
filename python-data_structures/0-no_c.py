@@ -7,5 +7,3 @@ def no_c(my_string):
         if char != 'c' and char != 'C':
             new_str += char
     return new_str
-
-print(no_c('Holberton School'))
