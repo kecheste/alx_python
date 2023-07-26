@@ -1,5 +1,5 @@
 def best_score(a_dictionary):
-    if a_dictionary == {} or a_dictionary.keys() == None:
+    if a_dictionary == {} or a_dictionary == None:
         return None
     max_key = next(iter(a_dictionary))
     for key in a_dictionary:
