@@ -14,3 +14,8 @@ class Square(Rectangle):
         self.integer_validator("size", size)
         self.__size = size
         super().__init__(size, size)
+
+
+__doc__ = """
+this is documentation for my module
+"""

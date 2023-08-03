@@ -24,3 +24,8 @@ class Rectangle(BaseGeometry):
 
     def __str__(self):
         return f"[Rectangle] {self.__width}/{self.__height}"
+
+
+__doc__ = """
+this is documentation for my module
+"""

@@ -14,3 +14,8 @@ class Rectangle(BaseGeometry):
 
         self.integer_validator("height", height)
         self.__height = height
+
+
+__doc__ = """
+this is documentation for my module
+"""
