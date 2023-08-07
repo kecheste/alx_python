@@ -1,5 +1,7 @@
-import base
-""" Module that contains class Base """
+""" Module that contains class Rectangle,
+inheritance of class Base
+"""
+from models.base import base
 
 
 class Rectangle(base.Base):
