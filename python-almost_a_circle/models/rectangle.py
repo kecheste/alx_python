@@ -77,5 +77,6 @@ class Rectangle(Base):
         return self.width * self.height
 
     def display(self):
+        """ returns the # representation of the rectangle object """
         for i in range(self.height):
             print(self.width * '#')
