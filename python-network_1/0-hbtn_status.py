@@ -27,4 +27,4 @@ if __name__ == "__main__":
     body = fetch_url(url)
     print("Body response:")
     print("\t- type:", type(body))
-    print("\t- content:", body)
+    print("\t- content:", body.decode("utf-8"))
