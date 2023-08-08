@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Sends a request to a URL and displays the value of the X-Request-Id header in the response.
 """
