@@ -25,6 +25,5 @@ def search_user(letter):
             print('Error: {}'.format(response.status_code))
 
 
-if __name__ == '__main__':
-    letter = sys.argv[1] if len(sys.argv) > 1 else ''
-    search_user(letter)
+letter = sys.argv[1] if len(sys.argv) > 1 else ''
+search_user(letter)
