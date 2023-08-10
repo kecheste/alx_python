@@ -1,30 +1,22 @@
+#!/usr/bin/python3
+"""Sends a POST request to http://0.0.0.0:5000/search_user with a given letter.
+  - The letter is sent as the value of the variable `q`.
+  - If no letter is provided, sends `q=""`.
 """
-Sends a request to a URL and displays the value of the X-Request-Id header in the response.
-"""
-import requests
 import sys
+import requests
 
 
-def search_user(letter):
-    """Sends a POST request to http://0.0.0.0:5000/search_user with the given letter."""
-    url = 'http://0.0.0.0:5000/search_user'
-    data = {'q': letter}
-    response = requests.post(url, data=data)
+if __name__ == "__main__":
+    letter = "" if len(sys.argv) == 1 else sys.argv[1]
+    payload = {"q": letter}
 
-    if response.status_code == 200:
-        response_json = response.json()
-        if response_json:
-            print('[{id}] {name}'.format(
-                id=response_json['id'], name=response_json['name']))
+    r = requests.post("http://0.0.0.0:5000/search_user", data=payload)
+    try:
+        response = r.json()
+        if response == {}:
+            print("No result")
         else:
-            print('No result')
-    else:
-        if response.headers['Content-Type'] == 'application/json':
-            print('Not a valid JSON')
-        else:
-            print('Error: {}'.format(response.status_code))
-
-
-if __name__ == '__main__':
-    letter = sys.argv[1] if len(sys.argv) > 1 else ''
-    search_user(letter)
+            print("[{}] {}".format(response.get("id"), response.get("name")))
+    except ValueError:
+        print("Not a valid JSON")
