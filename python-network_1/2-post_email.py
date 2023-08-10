@@ -10,7 +10,7 @@ if __name__ == "__main__":
     email = sys.argv[2]  # Email received as the second command-line argument
 
     payload = {"email": email}
-    response = requests.post(url, data=payload)
+    response = requests.post(url, params=payload)
 
     print("Your email is:", email)
     print(response.text)
