@@ -7,18 +7,21 @@ import sys
 import requests
 
 
-if __name__ == "__main__":
-    if len(sys.argv) <= 1:
-        payload = {"q": ''}
-    else:
-        payload = {"q": sys.argv[1]}
-
-    r = requests.post("http://0.0.0.0:5000/search_user", data=payload)
+def search_user(letter):
+    """ test"""
+    url = f"http://0.0.0.0:5000/search_user"
+    params = {"q": letter}
     try:
-        response = r.json()
-        if response == {}:
-            print("No result")
+        response = requests.post(url, data=params)
+        data = response.json()
+        if data:
+            print(f"[{data['id']}] {data['name']}")
         else:
-            print("[{}] {}".format(response.get("id"), response.get("name")))
-    except ValueError:
+            print("No result")
+    except Exception as e:
         print("Not a valid JSON")
+
+
+if __name__ == "__main__":
+    letter = sys.argv[1] if len(sys.argv) > 1 else ""
+    search_user(letter)
