@@ -9,6 +9,6 @@ db = MySQLdb.connect(
     host='localhost', user=username, passwd=password, db=database, port=3306)
 
 c = db.cursor()
-c.execute("""SELECT * FROM states ORDER BY states.id ASC""")
+c.executemany("""SELECT * FROM states ORDER BY states.id ASC""")
 
 c.fetchall()
