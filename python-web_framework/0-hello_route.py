@@ -1,13 +1,14 @@
-"""Importing flask package"""
 from flask import Flask
 
-app = Flask()
-"""initializing flask app"""
+app = Flask(__name__)
+
+# Define a route for the root URL with strict_slashes=False
 
 
-@app.route('/')
-def home():
-    return "Hello HBNB!"
+@app.route('/', strict_slashes=False)
+def hello_hbnb():
+    return 'Hello HBNB!'
 
 
-"""initializing basic routign"""
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
