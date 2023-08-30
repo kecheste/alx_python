@@ -1,44 +1,46 @@
 #!/usr/bin/python3
-'''
-Starts a Flask web application.
-'''
+""" task on flask"""
 from flask import Flask, render_template
-
 app = Flask(__name__)
 
 
-@app.route('/', strict_slashes=False)
-def hello_hbnb():
-    return 'Hello HBNB!'
+# this rout by default called when run it
+@app.route("/", strict_slashes=False)
+def display():
+    # this is the method to dispaly message for user
+    return ("Hello HBNB!")
 
 
-@app.route('/hbnb', strict_slashes=False)
-def hbnb():
-    return 'HBNB'
+@app.route("/hbnb", strict_slashes=False)
+def show_message():
+    # Dispaly HBNB message for user
+    return ("HBNB")
 
 
-@app.route('/c/<text>', strict_slashes=False)
-def display_c_text(text):
-    text = text.replace('_', ' ')
-    return 'C {}'.format(text)
+@app.route("/c/<text>", strict_slashes=False)
+def show_C(text):
+    # this is the method2 to dispaly message for user
+    return ("C {}".format(text.replace("_", " ")))
 
 
-@app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
-@app.route('/python/<text>', strict_slashes=False)
-def display_python_text(text):
-    text = text.replace('_', ' ')
-    return 'Python {}'.format(text)
+@app.route("/python/", defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route("/python/<text>", strict_slashes=False)
+def show_python(text):
+    # Display C with text for user
+    return ("Python {}".format(text.replace("_", " ")))
 
 
-@app.route('/number/<int:n>', strict_slashes=False)
-def display_number(n):
-    return '{} is a number'.format(n)
+@app.route("/number/<int:n>", strict_slashes=False)
+def show_number(n):
+    # Display int Number with text for user
+    return ("{} is a number" .format(n))
 
 
-@app.route('/5-number_template/<int:number>', strict_slashes=False)
-def display_number_template(number):
-    return render_template('5-number.html', number=number)
+@app.route("/number_template/<int:n>", strict_slashes=False)
+def show_number_template(n):
+    # Display int Number using Template
+    return (render_template('5-number.html', number=n))
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run("0.0.0.0", port=5000)
