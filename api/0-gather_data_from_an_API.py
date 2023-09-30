@@ -16,7 +16,7 @@ for i in data2:
     if i.get('completed') == True:
         completed += 1
 
-print('Employee {} is done with tasks({}/{})'.format(data.get('name'),
+print('Employee {} is done with tasks({}/{}):'.format(data.get('name'),
       completed, len(data2)))
 for item in data2:
     if item.get('completed') == True:
