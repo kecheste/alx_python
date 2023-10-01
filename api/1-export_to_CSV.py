@@ -2,19 +2,15 @@ import csv
 import requests
 import sys
 
+if __name__ == "__main__":
+    user_id = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url + "users/{}".format(user_id)).json()
+    username = user.get("username")
+    todos = requests.get(url + "todos", params={"userId": user_id}).json()
 
-id = sys.argv[1]
-
-r = requests.get('https://jsonplaceholder.typicode.com/users/' + id)
-r2 = requests.get('https://jsonplaceholder.typicode.com/users/' + id + '/todos')
-data = r.json()
-data2 = r2.json()
-
-data.get('username')
-
-filename = data.get('id')
-with open("{}.csv".format(filename), 'w', newline='') as file:
-    writer = csv.writer(file)
-
-    for item in data2:
-        writer.writerow(["{},".format(data.get('id'))+"{},".format(data.get('username'))+"{},".format(item.get('completed'))+"{}".format(item.get('title'))])
+    with open("{}.csv".format(user_id), "w", newline="") as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        [writer.writerow(
+            [user_id, username, t.get("completed"), t.get("title")]
+        ) for t in todos]
