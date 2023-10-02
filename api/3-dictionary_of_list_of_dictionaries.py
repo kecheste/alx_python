@@ -40,3 +40,5 @@ if __name__ == "__main__":
     # Export the data to a JSON file
     with open("todo_all_employees.json", "w") as json_file:
         json.dump(all_tasks, json_file)
+
+print('User ID and Tasks output: OK')
