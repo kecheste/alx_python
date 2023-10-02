@@ -1,6 +1,6 @@
 """Accessing a REST API for todo lists of employees"""
-import requests
 import csv
+import requests
 import sys
 
 
