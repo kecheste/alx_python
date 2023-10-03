@@ -26,8 +26,7 @@ def export_employee_todo_to_csv(employee_id):
         csv_file_name = f'{employee_id}.csv'
         with open(csv_file_name, 'w', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
-            csv_writer.writerow(['USER_ID', 'USERNAME', 'TASK_COMPLETED_STATUS', 'TASK_TITLE'])
-
+            
             for task in todos_data:
                 task_completed_status = 'Yes' if task.get('completed') else 'No'
                 csv_writer.writerow([employee_id, employee_name, task_completed_status, task.get('title')])
