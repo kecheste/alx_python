@@ -1,48 +1,61 @@
-"""Accessing a REST API for todo lists of employees"""
+"""
+Employee Task Data Exporter
+
+This module retrieves task data for a specific employee from a remote API and exports it to a JSON file.
+
+Usage:
+    python script.py <employee_id>
+
+Example:
+    python script.py 1
+
+Requirements:
+    - requests library (install using 'pip install requests')
+
+"""
+
 import json
 import requests
 import sys
 
 
-def get_employee_info(employee_id):
-    # Fetch employee details
-    employee_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    response = requests.get(employee_url)
-    employee_data = response.json()
+def get_employee_data(employee_id):
+    # Define the API endpoints
+    user_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+    todos_url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
 
-    if response.status_code != 200:
-        print(f"Error: Unable to fetch employee data for ID {employee_id}")
-        return
+    try:
+        # Fetch user data
+        user_response = requests.get(user_url)
+        user_data = user_response.json()
+        username = user_data.get('username')
 
-    user_id = employee_data["id"]
-    username = employee_data["username"]
+        # Fetch TODO list data
+        todos_response = requests.get(todos_url)
+        todos_data = todos_response.json()
 
-    # Fetch TODO list for the employee
-    todos_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}/todos"
-    response = requests.get(todos_url)
-    todos_data = response.json()
+        # Create a list to store tasks for this employee
+        user_tasks = []
 
-    if response.status_code != 200:
-        print(f"Error: Unable to fetch TODO list for ID {employee_id}")
-        return
+        # Populate the user_tasks list
+        for task in todos_data:
+            task_data = {
+                "task": task["title"],
+                "completed": task["completed"],
+                "username": username
+            }
+            user_tasks.append(task_data)
 
-    # Create a dictionary to store tasks
-    tasks_dict = {user_id: []}
+        # Write the data to a JSON file named USER_ID.json
+        output_file = f"{employee_id}.json"
+        with open(output_file, "w") as json_file:
+            json.dump(user_tasks, json_file)
 
-    for task in todos_data:
-        task_dict = {
-            "task": task["title"],
-            "completed": task["completed"],
-            "username": username
-        }
-        tasks_dict[user_id].append(task_dict)
+        print(f"Data exported to {output_file}")
 
-    # Export data to JSON file
-    json_file_name = f"{user_id}.json"
-    with open(json_file_name, 'w') as json_file:
-        json.dump(tasks_dict, json_file, indent=4)
-
-    print(f"Data exported to {json_file_name}")
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
@@ -50,10 +63,5 @@ if __name__ == "__main__":
         print("Usage: python script.py <employee_id>")
         sys.exit(1)
 
-    try:
-        employee_id = int(sys.argv[1])
-    except ValueError:
-        print("Error: Employee ID must be an integer")
-        sys.exit(1)
-
-    get_employee_info(employee_id)
+    employee_id = int(sys.argv[1])
+    get_employee_data(employee_id)
