@@ -4,7 +4,6 @@ import sys
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 3-dictionary_of_list_of_dictionaries.py <output_file>")
         sys.exit(1)
 
     output_file = sys.argv[1]
@@ -14,7 +13,6 @@ if __name__ == "__main__":
     tasks_response = requests.get("https://jsonplaceholder.typicode.com/todos")
 
     if users_response.status_code != 200 or tasks_response.status_code != 200:
-        print("Failed to fetch data.")
         sys.exit(1)
 
     users = users_response.json()
@@ -41,5 +39,3 @@ if __name__ == "__main__":
     # Write the data to the output file in JSON format
     with open(output_file, "w") as json_file:
         json.dump(user_tasks, json_file)
-
-    print(f"Data exported to {output_file}")
