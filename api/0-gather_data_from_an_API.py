@@ -3,11 +3,9 @@ import sys
 
 id = sys.argv[1]
 
-r = requests.get('https://jsonplaceholder.typicode.com/users/' + id)
-r2 = requests.get(
-    'https://jsonplaceholder.typicode.com/users/' + id + '/todos')
-data = r.json()
-data2 = r2.json()
+data = requests.get('https://jsonplaceholder.typicode.com/users/' + id).json()
+data2 = requests.get(
+    'https://jsonplaceholder.typicode.com/users/' + id + '/todos').json()
 
 completed = 0
 
