@@ -1,67 +1,49 @@
 """
-Employee Task Data Exporter
+This script uses an API to retrieve employee task information
+and display in a special format.
 
-This module retrieves task data for a specific employee from a remote API and exports it to a JSON file.
-
-Usage:
-    python script.py <employee_id>
-
-Example:
-    python script.py 1
-
-Requirements:
-    - requests library (install using 'pip install requests')
-
+It retrieves employees name, task completed with their titles.
 """
-
 import json
 import requests
 import sys
 
-
-def get_employee_data(employee_id):
-    # Define the API endpoints
-    user_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    todos_url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-
-    try:
-        # Fetch user data
-        user_response = requests.get(user_url)
-        user_data = user_response.json()
-        username = user_data.get('username')
-
-        # Fetch TODO list data
-        todos_response = requests.get(todos_url)
-        todos_data = todos_response.json()
-
-        # Create a list to store tasks for this employee
-        user_tasks = []
-
-        # Populate the user_tasks list
-        for task in todos_data:
-            task_data = {
-                "task": task["title"],
-                "completed": task["completed"],
-                "username": username
-            }
-            user_tasks.append(task_data)
-
-        # Write the data to a JSON file named USER_ID.json
-        output_file = f"{employee_id}.json"
-        with open(output_file, "w") as json_file:
-            json.dump(user_tasks, json_file)
-
-        print(f"Data exported to {output_file}")
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-        sys.exit(1)
-
-
+# No execution of this file when imported
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python script.py <employee_id>")
-        sys.exit(1)
 
-    employee_id = int(sys.argv[1])
-    get_employee_data(employee_id)
+    # Pass employee id on command line
+    id = sys.argv[1]
+
+# APIs
+    userTodoURL = "https://jsonplaceholder.typicode.com/users/{}/todos".format(
+        id)
+    userProfile = "https://jsonplaceholder.typicode.com/users/{}".format(id)
+
+# Make requests on APIs
+    todoResponse = requests.get(userTodoURL)
+    profileResponse = requests.get(userProfile)
+
+# Parse responses and store in variables
+    todoJson_Data = todoResponse.json()
+    profileJson_Data = profileResponse.json()
+
+# Get employee information
+    employeeName = profileJson_Data['username']
+
+    dataList = []  # Empty list to store the dictionaries
+
+    for data in todoJson_Data:
+        dataDict = {
+            "task": data['title'], "completed": data['completed'], "username": employeeName}
+        dataList.append(dataDict)
+
+# A dictionary of list of dictionaries to be exported to JSON
+    outputData = {profileJson_Data['id']: dataList}
+
+# Specify the JSON file path
+    json_file_path = '{}.json'.format(todoJson_Data[0]['userId'])
+
+# Open the JSON file in write mode
+    with open(json_file_path, 'w') as json_file:
+        # Serialize and write the data to the JSON file
+        json.dump(outputData, json_file)
