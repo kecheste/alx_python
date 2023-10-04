@@ -6,44 +6,34 @@ It retrieves employees name, task completed with their titles.
 """
 import json
 import requests
-import sys
 
 # No execution of this file when imported
 if __name__ == "__main__":
 
-    # Pass employee id on command line
-    id = sys.argv[1]
+    outputDict = {}
+    for i in range(1, 11):
+        task_list = []
+        userProfile = "https://jsonplaceholder.typicode.com/users/{}".format(i)
+        profile_response = requests.get(userProfile).json()
+        user_id = profile_response['id']
+        username = profile_response['username']
 
-# APIs
-    userTodoURL = "https://jsonplaceholder.typicode.com/users/{}/todos".format(
-        id)
-    userProfile = "https://jsonplaceholder.typicode.com/users/{}".format(id)
+        userTodoURL = "https://jsonplaceholder.typicode.com/users/{}/todos".format(
+            i)
+        todo_response = requests.get(userTodoURL).json()
 
-# Make requests on APIs
-    todoResponse = requests.get(userTodoURL)
-    profileResponse = requests.get(userProfile)
+        for task in todo_response:
 
-# Parse responses and store in variables
-    todoJson_Data = todoResponse.json()
-    profileJson_Data = profileResponse.json()
+            dataDict = {"username": username,
+                        "task": task['title'], "completed": task['completed']}
+            task_list.append(dataDict)
 
-# Get employee information
-    employeeName = profileJson_Data['username']
+        outputDict[user_id] = task_list
 
-    dataList = []  # Empty list to store the dictionaries
-
-    for data in todoJson_Data:
-        dataDict = {
-            "task": data['title'], "completed": data['completed'], "username": employeeName}
-        dataList.append(dataDict)
-
-# A dictionary of list of dictionaries to be exported to JSON
-    outputData = {profileJson_Data['id']: dataList}
-
-# Specify the JSON file path
-    json_file_path = '{}.json'.format(todoJson_Data[0]['userId'])
+    # Specify the JSON file path
+    json_file_path = 'todo_all_employees.json'
 
 # Open the JSON file in write mode
     with open(json_file_path, 'w') as json_file:
         # Serialize and write the data to the JSON file
-        json.dump(outputData, json_file)
+        json.dump(outputDict, json_file)
