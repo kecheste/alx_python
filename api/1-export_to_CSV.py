@@ -1,45 +1,16 @@
-#!/usr/bin/python3
-"""
-Python script to export data in the CSV format.
-"""
-
 import csv
 import requests
 import sys
 
-
-def export_to_CSV(user_id):
-    employee_name = requests.get(
-        "https://jsonplaceholder.typicode.com/users/{}".format(user_id)
-    ).json()["name"]
-    tasks = requests.get(
-        "https://jsonplaceholder.typicode.com/users/{}/todos".format(user_id)
-    ).json()
-
-    tasks_data = []
-
-    for task in tasks:
-        tasks_data.append(
-            [
-                str(user_id),
-                employee_name,
-                task["completed"],
-                task["title"],
-            ]
-        )
-
-    with open(str(user_id) + ".csv", "w", encoding="UTF8", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerows(tasks_data)
-
-
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 script_name.py EMPLOYEE_ID")
-        sys.exit(1)
+    user_id = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url + "users/{}".format(user_id)).json()
+    username = user.get("username")
+    todos = requests.get(url + "todos", params={"userId": user_id}).json()
 
-    try:
-        employee_id = int(sys.argv[1])
-        export_to_CSV(employee_id)
-    except ValueError:
-        print("Please provide a valid employee ID.")
+    with open("{}.csv".format(user_id), "w", newline="\n") as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        [writer.writerow(
+            [user_id, username, t.get("completed"), t.get("title")]
+        ) for t in todos]
