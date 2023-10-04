@@ -1,50 +1,44 @@
 #!/usr/bin/python3
-"""
-Function to get employee information using the id
-"""
-
 import json
 import requests
-import sys
 
 
-def employee_info():
-    # get user data
-    users_url = f'https://jsonplaceholder.typicode.com/users'
-    user_data = requests.get(users_url)
-    users = user_data.json()
+def get_all_users_todos():
+    '''
+    Given Task:
+    Create a Python function that utilizes the Trello API to retrieve all the todos associated with a specific user.
+    The function should take the user's Trello API key and return a list of all the todos for useres
+    '''
+    user_url = 'https://jsonplaceholder.typicode.com/users'
+    try:
+        response = requests.get(user_url)
+        users = response.json()
+        all_users_todo = {}
 
-    all_employees = {}
+        for user in users:
+            user_id = user['id']
+            todos_url = 'https://jsonplaceholder.typicode.com/users/{}/todos'.format(
+                user_id)
+            response_todos = requests.get(todos_url)
+            response_todos.raise_for_status()
+            todos = response_todos.json()
+            user_todo_list = []
 
-    for user in users:
-        user_id = user['id']
+            for todo in todos:
+                user_todo_list.append({
+                    'username': user['username'],
+                    'task': todo['title'],
+                    'completed': todo['completed'],
+                })
 
-        # fetch todos
-        todo = f'https://jsonplaceholder.typicode.com/users/{user_id}/todos'
-        todo_list = requests.get(todo)
-        todos = todo_list.json()
+            all_users_todo[user_id] = user_todo_list
 
-        # exporting to a json
-        user_info = [
-            {
-                "username": user['name'],
-                "task": items['title'],
-                "completed": items['completed'],
-            }
-
-            for items in todos
-        ]
-
-        all_employees[user_id] = user_info
-
-    json_file = "todo_all_employees.json"
-
-    # write data to json file
-    with open(json_file, 'w', encoding='utf-8') as json_files:
-        json.dump(all_employees, json_files, indent=2)
-
-    print(f"JSON file '{json_file}' created successfully.")
+        json_file_name = 'todo_all_employees.json'
+        with open(json_file_name, mode='w') as json_file:
+            json.dump(all_users_todo, json_file)
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':
-    employee_info()
+    get_all_users_todos()
